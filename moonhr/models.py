@@ -36,7 +36,6 @@ class Astronaut(models.Model):
         SkillDescription, related_name='%(class)s_skill_three', on_delete=models.PROTECT, null=True)
     skillFour = models.ForeignKey(
         SkillDescription, related_name='%(class)s_skill_four', on_delete=models.PROTECT, null=True)
-    status = models.CharField(max_length=32) 
 
     def __str__(self):
         return f"{self.name} {self.surname}"
@@ -52,3 +51,20 @@ class MissionDebriefing(models.Model):
 
     def __str__(self):
         return f"In {self.parameters.place} {self.parameters.task} done"
+
+
+class UserProfile(models.Model):
+    userName = models.CharField(max_length=64)
+    hoursPassed = models.SmallIntegerField()
+
+    def __str__(self):
+        return f"{self.userName}"
+
+class UserAstronaut(models.Model):
+    user = models.ForeignKey(UserProfile, on_delete=models.PROTECT)
+    astronaut = models.ForeignKey(Astronaut, on_delete=models.PROTECT)
+    status = models.CharField(max_length=32) 
+
+    def __str__(self):
+        return f"{self.user.userName} -> {self.astronaut.name} {self.astronaut.surname} -> {self.status}"
+
