@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Astronaut CV</title>
+</head>
+
+<body>
+    <p>First name: {{page_obj.astronaut.name}}</p>
+    <p>Last name: {{page_obj.astronaut.surname}}</p>
+    <p>Status: {{page_obj.status}}</p>
+    <p>CV: {{page_obj.astronaut.cv|safe}}</p>
+    <div><a href="/">Back to Room</a></div>
+</body>
+
+</html>

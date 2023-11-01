@@ -7,10 +7,16 @@
 </head>
 
 <body>
-    <div> 
+    <div>
         {% for contact in page_obj %}
         <ul>
-            <li>{{ contact.astronaut.name }} {{ contact.astronaut.surname }} {{ contact.status }}</li>
+            <li>{{ contact.astronaut.name }} {{ contact.astronaut.surname }} {{ contact.status }}
+                <form action="/candidates/" method="get">
+                    <input  type="hidden" name="contact_pk_to_hire" value="{{ contact.pk }}">
+                    <button type="submit">Hire</button>
+                </form>
+                <a href="/cv/?contact_pk_to_view={{contact.pk}}">CV</a>
+            </li>
         </ul>
         {% endfor %}
     </div>

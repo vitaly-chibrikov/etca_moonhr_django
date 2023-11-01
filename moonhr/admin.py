@@ -18,7 +18,7 @@ admin.site.register(MissionRequestParameters, MissionRequestParametersAdmin)
 admin.site.register(MissionDebriefing)
 
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('userName', 'hoursPassed')
+    list_display = ('userName', 'isSelected')
 admin.site.register(UserProfile, UserProfileAdmin)
 
 admin.site.register(UserAstronaut)

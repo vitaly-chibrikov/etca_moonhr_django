@@ -11,6 +11,7 @@
         {% for contact in page_obj %}
         <ul>
             <li>{{ contact.astronaut.name }} {{ contact.astronaut.surname }} {{ contact.status }}</li>
+            <a href="/cv/?contact_pk_to_view={{contact.pk}}">CV</a>
         </ul>
         {% endfor %}
     </div>

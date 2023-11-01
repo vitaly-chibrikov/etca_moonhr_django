@@ -56,6 +56,7 @@ class MissionDebriefing(models.Model):
 class UserProfile(models.Model):
     userName = models.CharField(max_length=64)
     hoursPassed = models.SmallIntegerField()
+    isSelected = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.userName}"
@@ -67,4 +68,3 @@ class UserAstronaut(models.Model):
 
     def __str__(self):
         return f"{self.user.userName} -> {self.astronaut.name} {self.astronaut.surname} -> {self.status}"
-
