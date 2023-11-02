@@ -1,23 +1,35 @@
 from django.db import models
 
 
-class SkillDescription(models.Model):
-    skillName = models.CharField(max_length=64, unique=True)
-    skillDesc = models.TextField(default="")
+class SEX_CHOISES(models.TextChoices):
+    MALE = ("Male", "Male")
+    FEMALE = ("Female", "Female")
+
+
+class ASTRONAUT_STATUS_CHOISES(models.TextChoices):
+    CANDIDATE = ("Candidate", "Candidate")
+    READY = ("Ready", "Ready")
+    ONMISSION = ("On mission", "On mission")
+
+class MISSION_STATUS_CHOISES(models.TextChoices):
+    NEW = ("New", "New")
+    INPROGRESS = ("In progress", "In progress")
+    FINISHED = ("Finished", "Finished")
+
+
+class Skill(models.Model):
+    name = models.CharField(max_length=64, unique=True)
+    desc = models.TextField(default="")
 
     def __str__(self):
-        return f"{self.skillName}"
+        return f"{self.name}"
 
 
-class MissionRequestParameters(models.Model):
+class Mission(models.Model):
     place = models.CharField(max_length=64)
     who = models.CharField(max_length=64)
     task = models.CharField(max_length=256)
     description = models.TextField(default="")
-    skillOne = models.ForeignKey(
-        SkillDescription, related_name='%(class)s_skill_one', on_delete=models.PROTECT)
-    skillTwo = models.ForeignKey(
-        SkillDescription, related_name='%(class)s_skill_two', on_delete=models.PROTECT)
 
     def __str__(self):
         return f"In {self.place} do {self.task} "
@@ -26,45 +38,69 @@ class MissionRequestParameters(models.Model):
 class Astronaut(models.Model):
     name = models.CharField(max_length=64)
     surname = models.CharField(max_length=64)
-    sex = models.CharField(max_length=16)
+    sex = models.CharField(
+        max_length=16, choices=SEX_CHOISES.choices, default=SEX_CHOISES.MALE)
     cv = models.TextField(default="")
-    skillOne = models.ForeignKey(
-        SkillDescription, related_name='%(class)s_skill_one', on_delete=models.PROTECT, null=True)
-    skillTwo = models.ForeignKey(
-        SkillDescription, related_name='%(class)s_skill_two', on_delete=models.PROTECT, null=True)
-    skillThree = models.ForeignKey(
-        SkillDescription, related_name='%(class)s_skill_three', on_delete=models.PROTECT, null=True)
-    skillFour = models.ForeignKey(
-        SkillDescription, related_name='%(class)s_skill_four', on_delete=models.PROTECT, null=True)
 
     def __str__(self):
         return f"{self.name} {self.surname}"
 
 
-class MissionDebriefing(models.Model):
-    parameters = models.ForeignKey(
-        MissionRequestParameters, on_delete=models.PROTECT)
-    results00 = models.TextField(default="")
-    results10 = models.TextField(default="")
-    results01 = models.TextField(default="")
-    results11 = models.TextField(default="")
-
-    def __str__(self):
-        return f"In {self.parameters.place} {self.parameters.task} done"
-
-
 class UserProfile(models.Model):
-    userName = models.CharField(max_length=64)
-    hoursPassed = models.SmallIntegerField()
-    isSelected = models.BooleanField(default=False)
+    user_name = models.CharField(max_length=64)
+    hours_passed = models.SmallIntegerField()
+    is_selected = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.userName}"
+        return f"{self.user_name}"
+
 
 class UserAstronaut(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.PROTECT)
     astronaut = models.ForeignKey(Astronaut, on_delete=models.PROTECT)
-    status = models.CharField(max_length=32) 
+    status = models.CharField(
+        max_length=16, choices=ASTRONAUT_STATUS_CHOISES.choices, default=ASTRONAUT_STATUS_CHOISES.CANDIDATE)
 
     def __str__(self):
-        return f"{self.user.userName} -> {self.astronaut.name} {self.astronaut.surname} -> {self.status}"
+        return f"{self.user.user_name} -> {self.astronaut.name} {self.astronaut.surname} -> {self.status}"
+
+
+class AstronautSkill(models.Model):
+    astronaut = models.ForeignKey(Astronaut, on_delete=models.PROTECT)
+    skill = models.ForeignKey(Skill, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return f"{self.astronaut.name} {self.astronaut.surname} -> {self.skill.name}"
+
+
+class MissionResult(models.Model):
+    description = models.TextField(default="")
+    comments = models.TextField(default="")
+
+    def __str__(self):
+        return self.comments
+
+
+class MissionSkill(models.Model):
+    mission = models.ForeignKey(Mission, on_delete=models.PROTECT)
+    skill = models.ForeignKey(
+        Skill, on_delete=models.PROTECT, null=True, default=None, blank=True)
+    result = models.ForeignKey(
+        MissionResult, on_delete=models.PROTECT, null=True, default=None, blank=True)
+    skills_used = models.SmallIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.mission.place} {self.mission.task} -> {self.result.comments if self.result else ''} -> ({self.skills_used}) -> SKILL: {self.skill.name if self.skill else 'None'} "
+
+
+class UserMission(models.Model):
+    user = models.ForeignKey(UserProfile, on_delete=models.PROTECT)
+    mission = models.ForeignKey(Mission, on_delete=models.PROTECT)
+    status = models.CharField(max_length=16, choices=MISSION_STATUS_CHOISES.choices, default=MISSION_STATUS_CHOISES.NEW)
+    astronaut = models.ForeignKey(
+        Astronaut, on_delete=models.PROTECT, null=True, blank=True)
+    result = models.ForeignKey(
+        MissionResult, on_delete=models.PROTECT, null=True, default=None, blank=True)
+
+    def __str__(self):
+        return f"{self.user.user_name} -> {self.mission} -> {self.status}"

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Mission Description</title>
+</head>
+
+<body>
+    <p>Place: {{page_obj.mission.place}}</p>
+    <p>Who: {{page_obj.mission.who}}</p>
+    <p>Status: {{page_obj.status}}</p>
+    <p>Task: {{page_obj.mission.task}}</p>
+    <p>Astronaut: {{page_obj.astronaut.name}}</p>
+    <p>Description: {{page_obj.mission.description|safe}}</p>
+    <p>Result: {{description|safe}}</p>
+
+    <div><a href="/">Back to Room</a></div>
+</body>
+
+</html>

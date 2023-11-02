@@ -2,8 +2,10 @@ from django.urls import path
 from moonhr import views
 
 urlpatterns = [
-    path("", views.homeView),
-    path("candidates/", views.candidatesView),
-    path("employees/", views.employeesView),
-    path("cv/", views.cvView),
+    path("", views.home_view),
+    path("candidates/", views.candidates_view),
+    path("employees/", views.employees_view),
+    path("cv/", views.cv_view),
+    path("missions/", views.missions_view),  
+    path("mission-description/", views.mission_description_view),     
 ]

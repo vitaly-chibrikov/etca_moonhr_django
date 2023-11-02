@@ -3,22 +3,26 @@ from moonhr.models import *
 
 
 class AstronautAdmin(admin.ModelAdmin):
-    list_display = ('name', 'cv')
+    list_display = ('name', 'surname', 'sex')
 admin.site.register(Astronaut, AstronautAdmin)
 
 
-class SkillDescriptionAdmin(admin.ModelAdmin):
-    list_display = ('skillName', 'skillDesc')
-admin.site.register(SkillDescription, SkillDescriptionAdmin)
-
-class MissionRequestParametersAdmin(admin.ModelAdmin):
-    pass
-admin.site.register(MissionRequestParameters, MissionRequestParametersAdmin)
-
-admin.site.register(MissionDebriefing)
+class SkillAdmin(admin.ModelAdmin):
+    list_display = ('name', 'desc')
+admin.site.register(Skill, SkillAdmin)
 
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('userName', 'isSelected')
+    list_display = ('user_name', 'is_selected')
 admin.site.register(UserProfile, UserProfileAdmin)
 
 admin.site.register(UserAstronaut)
+
+admin.site.register(AstronautSkill)
+
+admin.site.register(Mission)
+
+admin.site.register(MissionSkill)
+
+admin.site.register(MissionResult)
+
+admin.site.register(UserMission)
