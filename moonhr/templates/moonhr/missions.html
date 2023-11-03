@@ -10,7 +10,7 @@
     <div> 
         {% for mission in page_obj %}
         <ul>
-            <li>{{ mission.mission.place }} | {{ mission.mission.task }} | {{ mission.status }}</li>
+            <li>{{ mission.mission.place.name }} | {{ mission.mission.task }} | {{ mission.status }}</li>
             <a href="/mission-description/?mission_pk_to_view={{mission.pk}}">Description</a>
         </ul>
         {% endfor %}

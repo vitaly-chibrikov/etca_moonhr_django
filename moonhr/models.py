@@ -11,6 +11,7 @@ class ASTRONAUT_STATUS_CHOISES(models.TextChoices):
     READY = ("Ready", "Ready")
     ONMISSION = ("On mission", "On mission")
 
+
 class MISSION_STATUS_CHOISES(models.TextChoices):
     NEW = ("New", "New")
     INPROGRESS = ("In progress", "In progress")
@@ -25,8 +26,16 @@ class Skill(models.Model):
         return f"{self.name}"
 
 
+class Place(models.Model):
+    name = models.CharField(max_length=256)
+    description = models.TextField(default="")
+
+    def __str__(self):
+        return f"{self.name}"
+
+
 class Mission(models.Model):
-    place = models.CharField(max_length=64)
+    place = models.ForeignKey(Place, on_delete=models.PROTECT)
     who = models.CharField(max_length=64)
     task = models.CharField(max_length=256)
     description = models.TextField(default="")
@@ -81,7 +90,7 @@ class MissionResult(models.Model):
         return self.comments
 
 
-class MissionSkill(models.Model):
+class MissionSkillResult(models.Model):
     mission = models.ForeignKey(Mission, on_delete=models.PROTECT)
     skill = models.ForeignKey(
         Skill, on_delete=models.PROTECT, null=True, default=None, blank=True)
@@ -96,7 +105,8 @@ class MissionSkill(models.Model):
 class UserMission(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.PROTECT)
     mission = models.ForeignKey(Mission, on_delete=models.PROTECT)
-    status = models.CharField(max_length=16, choices=MISSION_STATUS_CHOISES.choices, default=MISSION_STATUS_CHOISES.NEW)
+    status = models.CharField(
+        max_length=16, choices=MISSION_STATUS_CHOISES.choices, default=MISSION_STATUS_CHOISES.NEW)
     astronaut = models.ForeignKey(
         Astronaut, on_delete=models.PROTECT, null=True, blank=True)
     result = models.ForeignKey(

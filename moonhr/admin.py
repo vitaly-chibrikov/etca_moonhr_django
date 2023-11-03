@@ -21,8 +21,10 @@ admin.site.register(AstronautSkill)
 
 admin.site.register(Mission)
 
-admin.site.register(MissionSkill)
+admin.site.register(MissionSkillResult)
 
 admin.site.register(MissionResult)
 
 admin.site.register(UserMission)
+
+admin.site.register(Place)

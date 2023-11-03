@@ -59,55 +59,55 @@ def employees_view(request):
     paginator = Paginator(contact_list.get_employees(),
                           contact_list.paginate_by)
 
-    currentUser = UserProfile.objects.get(is_selected=True)
-    missions = UserMission.objects.filter(
-        user__pk=currentUser.pk).filter(status=MISSION_STATUS_CHOISES.NEW)
+    current_user = UserProfile.objects.get(is_selected=True)
+    user_missions = UserMission.objects.filter(
+        user__pk=current_user.pk).filter(status=MISSION_STATUS_CHOISES.NEW)
 
     user_astornaut_pk = request.GET.get("user_astornaut_pk")
     user_mission_pk = request.GET.get("user_mission_pk")
 
     if None not in (user_astornaut_pk, user_mission_pk):
-        user_mission = missions.get(pk=user_mission_pk)
+        user_mission = user_missions.get(pk=user_mission_pk)
         user_mission.status = MISSION_STATUS_CHOISES.INPROGRESS
         user_astronaut = contact_list.get_employees().get(pk=user_astornaut_pk)
         user_astronaut.status = ASTRONAUT_STATUS_CHOISES.ONMISSION
         user_mission.astronaut = user_astronaut.astronaut
         astronaut_skills = AstronautSkill.objects.filter(
             astronaut__pk=user_mission.astronaut.pk)
-        mission_results = MissionSkill.objects.filter(
+        mission_skill_results = MissionSkillResult.objects.filter(
             mission__pk=user_mission.mission.pk)
         results = set()
-        for mission_result in mission_results:
+        for mission_skill_result in mission_skill_results:
             result = astronaut_skills.filter(
-                skill=mission_result.skill).first()
+                skill=mission_skill_result.skill).first()
             if (result):
                 results.add(result)
 
         if (len(results) == 0):
-            mission_result = mission_results.get(skills_used=0)
-            user_mission.result = mission_result.result
+            mission_skill_result = mission_skill_results.get(skills_used=0)
+            user_mission.result = mission_skill_result.result
         elif (len(results) == 1):
-            mission_result = mission_results.filter(
+            mission_skill_result = mission_skill_results.filter(
                 skills_used=1).get(skill=results.pop().skill)
-            user_mission.result = mission_result.result
+            user_mission.result = mission_skill_result.result
         else:
-            mission_result = mission_results.filter(
+            mission_skill_result = mission_skill_results.filter(
                 skills_used=2).get(skill=results.pop().skill)
-            user_mission.result = mission_result.result
+            user_mission.result = mission_skill_result.result
 
         user_mission.save()
         user_astronaut.save()
 
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
-    return render(request, "moonhr/employees.html", {"page_obj": page_obj, "missions_obj": missions})
+    return render(request, "moonhr/employees.html", {"page_obj": page_obj, "missions_obj": user_missions})
 
 
 def cv_view(request):
     to_view_pk = request.GET.get("contact_pk_to_view")
-    currentUser = UserProfile.objects.get(is_selected=True)
+    current_user = UserProfile.objects.get(is_selected=True)
     astronaut = UserAstronaut.objects.filter(
-        user__pk=currentUser.pk).get(pk=to_view_pk)
+        user__pk=current_user.pk).get(pk=to_view_pk)
     return render(request, "moonhr/cv.html", {"page_obj": astronaut})
 
 
@@ -128,9 +128,9 @@ DEFAULT_ASTRONAUT_SURNAME = "Constantinopolus"
 
 def mission_description_view(request):
     to_view_pk = request.GET.get("mission_pk_to_view")
-    currentUser = UserProfile.objects.get(is_selected=True)
+    current_user = UserProfile.objects.get(is_selected=True)
     mission = UserMission.objects.filter(
-        user__pk=currentUser.pk).get(pk=to_view_pk)
+        user__pk=current_user.pk).get(pk=to_view_pk)
 
     description = ""
     if (mission.result):
