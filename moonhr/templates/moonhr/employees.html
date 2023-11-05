@@ -7,26 +7,33 @@
 </head>
 
 <body>
-    <div> 
-        {% for contact in page_obj %}
-        <ul>
-            <li>{{ contact.astronaut.name }} {{ contact.astronaut.surname }} {{ contact.status }}</li>
-            
-            <form action="/employees/" method="get">
-                <input  type="hidden" name="user_astornaut_pk" value="{{ contact.pk }}">
-                {% if contact.status == 'Ready' %}
-                <select id="missionselect" name="user_mission_pk">
-                    {% for mission in missions_obj %}
-                        <option value="{{mission.id}}">In {{ mission.mission.place }} {{ mission.mission.task }}</option>
-                    {% endfor %}
-                </select>
-                <button type="submit">Start</button>
-                {% endif %}
-            </form>
-          
-            <a href="/cv/?contact_pk_to_view={{contact.pk}}">CV</a>
-        </ul>
-        {% endfor %}
+    <div>
+        <form action="/employees/" method="get">
+            {% for contact in page_obj %}
+
+            <ul>
+                <li>{{ contact.user_astronaut.astronaut.name }} {{ contact.user_astronaut.astronaut.surname }} {{ contact.user_astronaut.status }}
+
+                    <input type="hidden" name="user_astornaut_pk" value="{{ contact.pk }}">
+                    {% if contact.status == 'Ready' %}
+                    <button type="submit">Start</button>
+                    {% endif %}
+                    <a href="/cv/?contact_pk_to_view={{contact.user_astronaut.pk}}">CV</a>
+                    <p>Tags:
+                        {% for user_astronaut_tag in contact.tags %}
+                        {{user_astronaut_tag.tag.tag}}
+                        {% endfor %}
+                    </p>
+                </li>
+            </ul>
+
+            {% endfor %}
+            <select id="missionselect" name="user_mission_pk">
+                {% for mission in missions_obj %}
+                <option value="{{mission.id}}">In {{ mission.mission.place }} {{ mission.mission.task }}</option>
+                {% endfor %}
+            </select>
+        </form>
     </div>
 
     <div class="pagination">

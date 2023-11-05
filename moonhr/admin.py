@@ -28,3 +28,5 @@ admin.site.register(MissionResult)
 admin.site.register(UserMission)
 
 admin.site.register(Place)
+
+admin.site.register(UserAstronautTag)
