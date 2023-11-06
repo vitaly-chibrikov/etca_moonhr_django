@@ -59,6 +59,7 @@ class UserProfile(models.Model):
     user_name = models.CharField(max_length=64)
     hours_passed = models.SmallIntegerField()
     is_selected = models.BooleanField(default=False)
+    score = models.SmallIntegerField(default=0) 
 
     def __str__(self):
         return f"{self.user_name}"
@@ -94,9 +95,10 @@ class AstronautSkill(models.Model):
 class MissionResult(models.Model):
     description = models.TextField(default="")
     comments = models.TextField(default="")
+    score = models.SmallIntegerField(default = 1) 
 
     def __str__(self):
-        return self.comments
+        return f"{self.comments} {self.score}"
 
 
 class MissionSkillResult(models.Model):

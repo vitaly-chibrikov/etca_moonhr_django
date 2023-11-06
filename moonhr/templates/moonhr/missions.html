@@ -7,11 +7,15 @@
 </head>
 
 <body>
-    <div> 
-        {% for mission in page_obj %}
+    <div>
+        <!--p>New missions: {{ page_obj.paginator.num_pages }}</p-->
+        {% for user_mission in page_obj %}
         <ul>
-            <li>{{ mission.mission.place.name }} | {{ mission.mission.task }} | {{ mission.status }}</li>
-            <a href="/mission-description/?mission_pk_to_view={{mission.pk}}">Description</a>
+            <li>
+                <p>{{ user_mission.mission.place.name }} | {{ user_mission.mission.task }} | {{ user_mission.status }}
+                </p>
+                <p>Description: {{user_mission.mission.description|safe}}</p>
+            </li>
         </ul>
         {% endfor %}
     </div>
@@ -32,6 +36,35 @@
             <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
             {% endif %}
         </span>
+    </div>
+
+    <div>
+        <p>Astronauts for missions: {{astronauts_count}} </p>
+        {% for contact in user_astronauts %}
+        <form action="/missions/" method="get">
+            <ul>
+                <li>{{ contact.user_astronaut.astronaut.name }}
+                    {{ contact.user_astronaut.astronaut.surname }}
+                    {{ contact.user_astronaut.status }}
+
+                    <input type="hidden" name="user_astornaut_pk" value="{{ contact.user_astronaut.pk }}">
+                    {% for user_mission in page_obj %}
+                    <input type="hidden" name="user_mission_pk" value="{{ user_mission.pk }}">
+                    {% endfor %}
+                    {% if contact.user_astronaut.status == 'Ready' %}
+                    <button type="submit">Start</button>
+                    {% endif %}
+                    <a href="/cv/?contact_pk_to_view={{contact.user_astronaut.pk}}">CV</a>
+                    <p>Tags:
+                        {% for user_astronaut_tag in contact.tags %}
+                        {{user_astronaut_tag.tag.tag}}
+                        {% endfor %}
+                    </p>
+                </li>
+            </ul>
+        </form>
+        {% endfor %}
+
     </div>
 
     <div><a href="/">Back to Room</a></div>

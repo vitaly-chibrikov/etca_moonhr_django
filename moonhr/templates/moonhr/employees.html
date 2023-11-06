@@ -7,18 +7,18 @@
 </head>
 
 <body>
-    <div>
-        <form action="/employees/" method="get">
+    <form action="/employees/" method="get">
+        <div>
+
             {% for contact in page_obj %}
 
             <ul>
-                <li>{{ contact.user_astronaut.astronaut.name }} {{ contact.user_astronaut.astronaut.surname }} {{ contact.user_astronaut.status }}
-
-                    <input type="hidden" name="user_astornaut_pk" value="{{ contact.pk }}">
-                    {% if contact.status == 'Ready' %}
-                    <button type="submit">Start</button>
-                    {% endif %}
-                    <a href="/cv/?contact_pk_to_view={{contact.user_astronaut.pk}}">CV</a>
+                <li>
+                    <p>{{ contact.user_astronaut.astronaut.name }}
+                        {{ contact.user_astronaut.astronaut.surname }}
+                        {{ contact.user_astronaut.status }}
+                        <a href="/cv/?contact_pk_to_view={{contact.user_astronaut.pk}}">CV</a>
+                    </p>
                     <p>Tags:
                         {% for user_astronaut_tag in contact.tags %}
                         {{user_astronaut_tag.tag.tag}}
@@ -28,33 +28,29 @@
             </ul>
 
             {% endfor %}
-            <select id="missionselect" name="user_mission_pk">
-                {% for mission in missions_obj %}
-                <option value="{{mission.id}}">In {{ mission.mission.place }} {{ mission.mission.task }}</option>
-                {% endfor %}
-            </select>
-        </form>
-    </div>
+        </div>
 
-    <div class="pagination">
-        <span class="step-links">
-            {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-            {% endif %}
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
 
-            <span class="current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
             </span>
+        </div>
 
-            {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-            {% endif %}
-        </span>
-    </div>
+        <div><a href="/">Back to Room</a></div>
 
-    <div><a href="/">Back to Room</a></div>
+    </form>
 </body>
 
 </html>
