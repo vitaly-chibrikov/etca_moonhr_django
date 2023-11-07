@@ -7,14 +7,22 @@
 </head>
 
 <body>
+    <div><a href="/">Back to Room</a></div>
+    <p>---------------------------------------------------</p>
+    <div>
+        <p>Here, you can hire astronauts.</p>
+        <p>View CVs and work with tags are free. Hiring process is taking 2 hours.</p>
+        <p>{{message}}</p>
+    </div>
+    <p>---------------------------------------------------</p>
     <div>
         {% for contact in page_obj %}
         <ul>
             <li>
-                <p>{{ contact.user_astronaut.astronaut.name }} 
-                   {{ contact.user_astronaut.astronaut.surname }} 
-                   {{contact.user_astronaut.status }}
-                   <a href="/cv/?contact_pk_to_view={{contact.user_astronaut.pk}}">CV</a>                            
+                <p>{{ contact.user_astronaut.astronaut.name }}
+                    {{ contact.user_astronaut.astronaut.surname }}
+                    {{contact.user_astronaut.status }}
+                    <a href="/cv/?contact_pk_to_view={{contact.user_astronaut.pk}}">CV</a>
                 </p>
                 <p>Tags:
                     {% for user_astronaut_tag in contact.tags %}
@@ -24,7 +32,7 @@
                 <form action="/candidates/" method="get">
                     <input type="hidden" name="contact_pk_to_hire" value="{{ contact.user_astronaut.pk }}">
                     <button type="submit">Hire</button>
-                </form> 
+                </form>
             </li>
         </ul>
         {% endfor %}
@@ -47,7 +55,7 @@
             {% endif %}
         </span>
     </div>
-
+    <p>---------------------------------------------------</p>
     <div><a href="/">Back to Room</a></div>
 </body>
 

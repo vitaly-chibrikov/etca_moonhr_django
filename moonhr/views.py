@@ -4,6 +4,7 @@ from moonhr.models import *
 from django.views.generic import ListView
 
 PAGINATE_BY_CONST = 20
+TIME_DAY_END = 18
 
 
 class AstronautWithTags:
@@ -66,6 +67,7 @@ class MissionListView(ListView):
 
 def home_view(request):
     current_user = UserProfile.objects.get(is_selected=True)
+
     reset_game = request.GET.get("reset_game")
     if reset_game == "1":
         mission_list = MissionListView()
@@ -81,26 +83,50 @@ def home_view(request):
         user_astronaut_tags.delete()
 
         current_user.score = 0
+        current_user.time = 10
+        current_user.day = 1
+        current_user.week = 1
         current_user.save()
 
-    finish_missions = request.GET.get("finish_missions")
-    if finish_missions == "1":
-        mission_list = MissionListView()
-        missions = mission_list.get_inprogress_missions()
-        for mission in missions:
-            mission.status = MISSION_STATUS_CHOISES.FINISHED
-            current_user.score += mission.result.score
-            current_user.save()
-            mission.save()
+    finish_missions_get = request.GET.get("finish_missions")
+    if finish_missions_get == "1":
+        finish_missions()
 
-        user_astronauts = UserAstronaut.objects.filter(user__pk=current_user.pk).filter(
+    end_day = request.GET.get("end_day")
+    if end_day == "1":
+        current_user.time = 10
+        current_user.day += 1
+        current_user.save()
+
+    end_week = request.GET.get("end_week")
+    if end_week == "1":
+        current_user.time = 10
+        current_user.day = 1
+        current_user.week += 1
+        current_user.save()
+
+        finish_missions()
+
+    current_user = UserProfile.objects.get(is_selected=True)
+    time = {"time": current_user.time, "day": current_user.day, "week": current_user.week}
+    return render(request, "moonhr/home.html", {"score": current_user.score, "time": time})
+
+def finish_missions():
+    current_user = UserProfile.objects.get(is_selected=True)
+    mission_list = MissionListView()
+    missions = mission_list.get_inprogress_missions()
+    for mission in missions:
+        mission.status = MISSION_STATUS_CHOISES.FINISHED
+        current_user.score += mission.result.score
+        current_user.save()
+        mission.save()
+
+    user_astronauts = UserAstronaut.objects.filter(user__pk=current_user.pk).filter(
             status=ASTRONAUT_STATUS_CHOISES.ONMISSION
         )
-        for user_astronaut in user_astronauts:
-            user_astronaut.status = ASTRONAUT_STATUS_CHOISES.READY
-            user_astronaut.save()
-
-    return render(request, "moonhr/home.html", {"score": current_user.score})
+    for user_astronaut in user_astronauts:
+        user_astronaut.status = ASTRONAUT_STATUS_CHOISES.READY
+        user_astronaut.save()
 
 
 def reset_missions(missions):
@@ -112,7 +138,17 @@ def reset_missions(missions):
 
 
 def candidates_view(request):
-    hire_astronaut(request)
+    current_user = UserProfile.objects.get(is_selected=True)
+
+    if current_user.time < 18:
+        hire_astronaut(request)
+
+    current_user = UserProfile.objects.get(is_selected=True)
+    message = f"Current time: {current_user.time}:00."
+    if current_user.time < 18:
+        message += " You can hire astronauts."
+    else:
+        message += " Day time is over. You can't hire more today."
 
     contac_list = ContactListView()
     paginator = Paginator(contac_list.get_candidates(), contac_list.paginate_by)
@@ -120,7 +156,7 @@ def candidates_view(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    return render(request, "moonhr/candidates.html", {"page_obj": page_obj})
+    return render(request, "moonhr/candidates.html", {"page_obj": page_obj, "message": message})
 
 
 def hire_astronaut(request):
@@ -129,6 +165,9 @@ def hire_astronaut(request):
         userAstronaut = UserAstronaut.objects.get(pk=to_hire_pk)
         userAstronaut.status = ASTRONAUT_STATUS_CHOISES.READY
         userAstronaut.save()
+        current_user = UserProfile.objects.get(is_selected=True)
+        current_user.time += 2
+        current_user.save()
 
 
 def employees_view(request):
@@ -175,6 +214,10 @@ def send_to_mission(request, user_missions):
             mission_skill_result = mission_skill_results.filter(skills_used=2).get(skill=results.pop().skill)
             user_mission.result = mission_skill_result.result
 
+        current_user = UserProfile.objects.get(is_selected=True)
+        current_user.time += 2
+        current_user.save()
+
         user_mission.save()
         user_astronaut.save()
 
@@ -211,7 +254,8 @@ def missions_view(request):
     current_user = UserProfile.objects.get(is_selected=True)
     user_missions = UserMission.objects.filter(user__pk=current_user.pk).filter(status=MISSION_STATUS_CHOISES.NEW)
 
-    send_to_mission(request, user_missions)
+    if current_user.time < 18:
+        send_to_mission(request, user_missions)
 
     mission_list = MissionListView()
     paginator = Paginator(mission_list.get_new_missions(), mission_list.paginate_by)
@@ -220,6 +264,14 @@ def missions_view(request):
     page_obj = paginator.get_page(page_number)
 
     user_astronauts = contact_list.get_employees()
+
+    current_user = UserProfile.objects.get(is_selected=True)
+    message = f"Current time: {current_user.time}:00."
+    if current_user.time < 18:
+        message += " You can send astronauts to missions."
+    else:
+        message += " Day time is over. You can't start more missions today."
+
     return render(
         request,
         "moonhr/missions.html",
@@ -228,6 +280,7 @@ def missions_view(request):
             "user_astronauts": user_astronauts,
             "user_missions": user_missions,
             "astronauts_count": len(user_astronauts) if user_astronauts else 0,
+            "message": message,
         },
     )
 

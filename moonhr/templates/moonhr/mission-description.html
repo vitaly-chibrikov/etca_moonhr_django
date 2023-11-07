@@ -7,14 +7,18 @@
 </head>
 
 <body>
+    <p>---------------------------------------------------</p>
+    <div><a href="/">Back to Room</a></div>
     <p>Place: {{page_obj.mission.place.name}}</p>
     <p>Who: {{page_obj.mission.who}}</p>
     <p>Status: {{page_obj.status}}</p>
     <p>Task: {{page_obj.mission.task}}</p>
     <p>Astronaut: {{page_obj.astronaut.name}}</p>
+    <p>---------------------------------------------------</p>
     <p>Description: {{page_obj.mission.description|safe}}</p>
+    <p>---------------------------------------------------</p>
     <p>Result: {{description|safe}}</p>
-
+    <p>---------------------------------------------------</p>
     <div><a href="/">Back to Room</a></div>
 </body>
 

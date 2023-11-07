@@ -9,30 +9,42 @@
 <body>
     <p>---------------------------------------------------</p>
     <p>Game:</p>
-    <div> 
-        <p><a href="candidates/">Candidates</a></p>  
+    <div>
+        <p><a href="candidates/">Candidates</a></p>
         <p><a href="employees/">Employees</a></p>
-        <p><a href="missions/">Missions</a></p>    
-        <p><a href="finished-missions/">Finished missions</a></p>  
-        
+        <p><a href="missions/">Missions</a></p>
+        <p><a href="finished-missions/">Finished missions</a></p>
+        <p>Current time: {{time.time}}:00</p>
+        {% if time.day < 5 %}
+        <form action="/" method="get">
+            <input type="hidden" name="end_day" value="1" />
+            <button type="submit">End day {{time.day}}</button>
+        </form>
+        <br/>
+        {% endif %}
+        <form action="/" method="get">
+            <input type="hidden" name="end_week" value="1" />
+            <button type="submit">End week {{time.week}}</button>
+        </form>
+
     </div>
     <p>Score: {{score}}</p>
     <p>---------------------------------------------------</p>
     <p>Debug:</p>
     <div>
         <form action="/" method="get">
-            <input type="hidden" name="reset_game" value="1"/>
+            <input type="hidden" name="reset_game" value="1" />
             <button type="submit">Reset game</button>
         </form>
-        <br/>
+        <br />
         <form action="/" method="get">
-            <input type="hidden" name="finish_missions" value="1"/>
+            <input type="hidden" name="finish_missions" value="1" />
             <button type="submit">Finish missions</button>
         </form>
     </div>
     <div>
-        <p><a href="mission-description/?mission_pk_to_view=1">Mission</a></p>   
-        <p><a href="cv/?contact_pk_to_view=1">CV</a></p> 
+        <p><a href="mission-description/?mission_pk_to_view=1">Mission</a></p>
+        <p><a href="cv/?contact_pk_to_view=1">CV</a></p>
     </div>
 </body>
 

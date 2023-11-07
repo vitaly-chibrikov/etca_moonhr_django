@@ -57,7 +57,9 @@ class Astronaut(models.Model):
 
 class UserProfile(models.Model):
     user_name = models.CharField(max_length=64)
-    hours_passed = models.SmallIntegerField()
+    time = models.SmallIntegerField(default=10)
+    day = models.SmallIntegerField(default=1)
+    week = models.SmallIntegerField(default=1)
     is_selected = models.BooleanField(default=False)
     score = models.SmallIntegerField(default=0) 
 

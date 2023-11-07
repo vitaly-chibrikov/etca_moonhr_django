@@ -7,6 +7,14 @@
 </head>
 
 <body>
+    <div><a href="/">Back to Room</a></div>
+    <p>---------------------------------------------------</p>
+    <div>
+        <p>Here, you can send employed astronauts on missions.</p>
+        <p>Reading mission details is free. Send to mission is taking 2 hours.</p>
+        <p>{{message}}</p>
+    </div>
+    <p>---------------------------------------------------</p>
     <div>
         <!--p>New missions: {{ page_obj.paginator.num_pages }}</p-->
         {% for user_mission in page_obj %}
@@ -37,7 +45,7 @@
             {% endif %}
         </span>
     </div>
-
+    <p>---------------------------------------------------</p>
     <div>
         <p>Astronauts for missions: {{astronauts_count}} </p>
         {% for contact in user_astronauts %}
@@ -66,7 +74,7 @@
         {% endfor %}
 
     </div>
-
+    <p>---------------------------------------------------</p>
     <div><a href="/">Back to Room</a></div>
 </body>
 

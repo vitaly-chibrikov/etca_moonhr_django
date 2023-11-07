@@ -7,50 +7,53 @@
 </head>
 
 <body>
-    <form action="/employees/" method="get">
-        <div>
+    <div><a href="/">Back to Room</a></div>
+    <p>---------------------------------------------------</p>
+    <div>
+        <p>Here, you can see your employees. CVs, tags and statuses.</p>
+        <p>View CVs and work with tags don't take your time.</p>
+    </div>
+    <p>---------------------------------------------------</p>
+    <div>
+        {% for contact in page_obj %}
 
-            {% for contact in page_obj %}
+        <ul>
+            <li>
+                <p>{{ contact.user_astronaut.astronaut.name }}
+                    {{ contact.user_astronaut.astronaut.surname }}
+                    {{ contact.user_astronaut.status }}
+                    <a href="/cv/?contact_pk_to_view={{contact.user_astronaut.pk}}">CV</a>
+                </p>
+                <p>Tags:
+                    {% for user_astronaut_tag in contact.tags %}
+                    {{user_astronaut_tag.tag.tag}}
+                    {% endfor %}
+                </p>
+            </li>
+        </ul>
 
-            <ul>
-                <li>
-                    <p>{{ contact.user_astronaut.astronaut.name }}
-                        {{ contact.user_astronaut.astronaut.surname }}
-                        {{ contact.user_astronaut.status }}
-                        <a href="/cv/?contact_pk_to_view={{contact.user_astronaut.pk}}">CV</a>
-                    </p>
-                    <p>Tags:
-                        {% for user_astronaut_tag in contact.tags %}
-                        {{user_astronaut_tag.tag.tag}}
-                        {% endfor %}
-                    </p>
-                </li>
-            </ul>
+        {% endfor %}
+    </div>
 
-            {% endfor %}
-        </div>
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
 
-        <div class="pagination">
-            <span class="step-links">
-                {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo; first</a>
-                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-                {% endif %}
-
-                <span class="current">
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                </span>
-
-                {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">next</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-                {% endif %}
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
             </span>
-        </div>
 
-        <div><a href="/">Back to Room</a></div>
-
-    </form>
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    <p>---------------------------------------------------</p>
+    <div><a href="/">Back to Room</a></div>
 </body>
 
 </html>
