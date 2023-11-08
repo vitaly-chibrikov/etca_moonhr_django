@@ -4,7 +4,6 @@ from moonhr.models import *
 from django.views.generic import ListView
 
 PAGINATE_BY_CONST = 20
-TIME_DAY_END = 18
 
 
 class AstronautWithTags:
@@ -82,11 +81,7 @@ def home_view(request):
         user_astronaut_tags = UserAstronautTag.objects.all()
         user_astronaut_tags.delete()
 
-        current_user.score = 0
-        current_user.time = 10
-        current_user.day = 1
-        current_user.week = 1
-        current_user.save()
+        current_user.reset()
 
     finish_missions_get = request.GET.get("finish_missions")
     if finish_missions_get == "1":
@@ -94,36 +89,67 @@ def home_view(request):
 
     end_day = request.GET.get("end_day")
     if end_day == "1":
-        current_user.time = 10
-        current_user.day += 1
-        current_user.save()
+        current_user.end_day()
 
     end_week = request.GET.get("end_week")
     if end_week == "1":
-        current_user.time = 10
-        current_user.day = 1
-        current_user.week += 1
-        current_user.save()
-
-        finish_missions()
+        current_user.end_week()
+        mission_list = MissionListView()
+        missions = mission_list.get_inprogress_missions()
+        for mission in missions:
+            mission.weeks_to_end -= 1
+            if mission.weeks_to_end == 0:
+                mission.status = MISSION_STATUS_CHOISES.FINISHED
+                current_user.score += mission.result.score
+                user_astronaut = UserAstronaut.objects.filter(user__pk=current_user.pk).get(astronaut__pk=mission.astronaut.pk)
+                user_astronaut.status = ASTRONAUT_STATUS_CHOISES.READY
+                user_astronaut.save()
+            current_user.save()
+            mission.save()
 
     current_user = UserProfile.objects.get(is_selected=True)
     time = {"time": current_user.time, "day": current_user.day, "week": current_user.week}
-    return render(request, "moonhr/home.html", {"score": current_user.score, "time": time})
+    profile = get_profile(current_user)
+    return render(request, "moonhr/home.html", {"score": current_user.score, "time": time, "profile": profile})
+
+
+def get_profile(current_user):
+    candidates = UserAstronaut.objects.filter(user__pk=current_user.pk).filter(
+        status=ASTRONAUT_STATUS_CHOISES.CANDIDATE
+    )
+    ready = UserAstronaut.objects.filter(user__pk=current_user.pk).filter(status=ASTRONAUT_STATUS_CHOISES.READY)
+    new_missions = UserMission.objects.filter(user__pk=current_user.pk).filter(status=MISSION_STATUS_CHOISES.NEW)
+    current_missions = UserMission.objects.filter(user__pk=current_user.pk).filter(
+        status=MISSION_STATUS_CHOISES.INPROGRESS
+    )
+    finished_missions = UserMission.objects.filter(user__pk=current_user.pk).filter(
+        status=MISSION_STATUS_CHOISES.FINISHED
+    )
+
+    profile = {
+        "candidates": len(candidates),
+        "ready": len(ready),
+        "new_missions": len(new_missions),
+        "current_missions": len(current_missions),
+        "finished_missions": len(finished_missions),
+    }
+    return profile
+
 
 def finish_missions():
     current_user = UserProfile.objects.get(is_selected=True)
     mission_list = MissionListView()
     missions = mission_list.get_inprogress_missions()
     for mission in missions:
+        mission.weeks_to_end = 0
         mission.status = MISSION_STATUS_CHOISES.FINISHED
         current_user.score += mission.result.score
         current_user.save()
         mission.save()
 
     user_astronauts = UserAstronaut.objects.filter(user__pk=current_user.pk).filter(
-            status=ASTRONAUT_STATUS_CHOISES.ONMISSION
-        )
+        status=ASTRONAUT_STATUS_CHOISES.ONMISSION
+    )
     for user_astronaut in user_astronauts:
         user_astronaut.status = ASTRONAUT_STATUS_CHOISES.READY
         user_astronaut.save()
@@ -134,18 +160,19 @@ def reset_missions(missions):
         mission.result = None
         mission.astronaut = None
         mission.status = MISSION_STATUS_CHOISES.NEW
+        mission.weeks_to_end = UserMission.DEFAULT_WEEKS_TO_END
         mission.save()
 
 
 def candidates_view(request):
     current_user = UserProfile.objects.get(is_selected=True)
 
-    if current_user.time < 18:
+    if current_user.time < UserProfile.TIME_DAY_END:
         hire_astronaut(request)
 
     current_user = UserProfile.objects.get(is_selected=True)
     message = f"Current time: {current_user.time}:00."
-    if current_user.time < 18:
+    if current_user.time < UserProfile.TIME_DAY_END:
         message += " You can hire astronauts."
     else:
         message += " Day time is over. You can't hire more today."
@@ -166,8 +193,7 @@ def hire_astronaut(request):
         userAstronaut.status = ASTRONAUT_STATUS_CHOISES.READY
         userAstronaut.save()
         current_user = UserProfile.objects.get(is_selected=True)
-        current_user.time += 2
-        current_user.save()
+        current_user.do_work()
 
 
 def employees_view(request):
@@ -209,13 +235,12 @@ def send_to_mission(request, user_missions):
         elif len(results) == 1:
             mission_skill_result = mission_skill_results.filter(skills_used=1).get(skill=results.pop().skill)
             user_mission.result = mission_skill_result.result
-
         else:
             mission_skill_result = mission_skill_results.filter(skills_used=2).get(skill=results.pop().skill)
             user_mission.result = mission_skill_result.result
 
         current_user = UserProfile.objects.get(is_selected=True)
-        current_user.time += 2
+        current_user.time += UserProfile.HOURS_PER_ACTION
         current_user.save()
 
         user_mission.save()
@@ -227,9 +252,15 @@ def cv_view(request):
     user_astronaut = UserAstronaut.objects.get(pk=to_view_pk)
 
     add_tag(request, user_astronaut)
+    remove_tag(request)
 
-    more_tags = Skill.objects.all()
     user_astronaut_tags = UserAstronautTag.objects.filter(user_astronaut__pk=user_astronaut.pk)
+    more_tags = list(Skill.objects.all())
+    used_tags = []
+    for user_astronaut_tag in user_astronaut_tags:
+        used_tags.append(user_astronaut_tag.tag)
+        more_tags.remove(user_astronaut_tag.tag)
+    
     tags_menu_obj = {"user_astronaut_tags": user_astronaut_tags, "more_tags": more_tags, "get_page": "/cv/"}
 
     return render(
@@ -240,21 +271,25 @@ def cv_view(request):
 
 
 def add_tag(request, user_astronaut):
-    tag_to_add_pk = request.GET.get("skill_tag_pk")
-    if tag_to_add_pk:
-        skill_tag_to_add = Skill.objects.get(pk=tag_to_add_pk)
+    add_tag_pk = request.GET.get("add_tag_pk")
+    if add_tag_pk:
+        skill_tag_to_add = Skill.objects.get(pk=add_tag_pk)
         user_astronaut_tag = UserAstronautTag()
         user_astronaut_tag.user_astronaut = user_astronaut
         user_astronaut_tag.tag = skill_tag_to_add
         user_astronaut_tag.save()
 
+def remove_tag(request):
+    remove_tag_pk = request.GET.get("remove_tag_pk")
+    if remove_tag_pk:
+        UserAstronautTag.objects.get(pk=remove_tag_pk).delete()
 
 def missions_view(request):
     contact_list = ContactListView()
     current_user = UserProfile.objects.get(is_selected=True)
     user_missions = UserMission.objects.filter(user__pk=current_user.pk).filter(status=MISSION_STATUS_CHOISES.NEW)
 
-    if current_user.time < 18:
+    if current_user.time < UserProfile.TIME_DAY_END:
         send_to_mission(request, user_missions)
 
     mission_list = MissionListView()
@@ -267,7 +302,7 @@ def missions_view(request):
 
     current_user = UserProfile.objects.get(is_selected=True)
     message = f"Current time: {current_user.time}:00."
-    if current_user.time < 18:
+    if current_user.time < UserProfile.TIME_DAY_END:
         message += " You can send astronauts to missions."
     else:
         message += " Day time is over. You can't start more missions today."
@@ -291,24 +326,25 @@ class MissionWithDescription:
         self.description = description
 
 
-def finished_missions_view(request):
+def workon_missions_view(request):
     mission_list = MissionListView()
-    finished_missions = mission_list.get_finished_missions()
-    finished_missions_with_descrition = []
-    for finished_mission in finished_missions:
-        description = correct_description(finished_mission)
-        finished_missions_with_descrition.append(MissionWithDescription(finished_mission, description))
+    type_of_mission = request.GET.get("type")
+    if(type_of_mission == "finished"):
+        missions = mission_list.get_finished_missions()
+    else:
+        missions = mission_list.get_inprogress_missions()
 
-    paginator = Paginator(finished_missions_with_descrition, mission_list.paginate_by)
+    missions_with_description = []
+    for mission in missions: 
+        description = mission.correct_description()
+        missions_with_description.append(MissionWithDescription(mission, description))
+
+    paginator = Paginator(missions_with_description, mission_list.paginate_by)
 
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    return render(request, "moonhr/finished-missions.html", {"page_obj": page_obj})
-
-
-DEFAULT_ASTRONAUT_NAME = "Constantine"
-DEFAULT_ASTRONAUT_SURNAME = "Constantinopolus"
+    return render(request, "moonhr/workon-missions.html", {"page_obj": page_obj, "finished":type_of_mission == "finished"})
 
 
 def mission_description_view(request):
@@ -316,22 +352,6 @@ def mission_description_view(request):
     current_user = UserProfile.objects.get(is_selected=True)
     mission = UserMission.objects.filter(user__pk=current_user.pk).get(pk=to_view_pk)
 
-    description = correct_description(mission)
+    description = mission.correct_description()
 
     return render(request, "moonhr/mission-description.html", {"page_obj": mission, "description": description})
-
-
-def correct_description(mission):
-    description = ""
-    if mission.result:
-        description = mission.result.description
-        astronaut_name = mission.astronaut.name
-        astronaut_surname = mission.astronaut.surname
-        description = description.replace(DEFAULT_ASTRONAUT_NAME, astronaut_name)
-        description = description.replace(DEFAULT_ASTRONAUT_SURNAME, astronaut_surname)
-        if mission.astronaut.sex is str(SEX_CHOISES.FEMALE):
-            # he/him/his to she/her/hers
-            description = description.replace(" he ", " she ").replace(" him ", " her ").replace(" his ", " her ")
-            description = description.replace("He ", "She ").replace("Him ", "Her ").replace("Him ", "Her ")
-            description = description.replace(" he.", " she.").replace(" him.", " her.").replace(" his.", " hers.")
-    return description

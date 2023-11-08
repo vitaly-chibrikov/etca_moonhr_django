@@ -4,6 +4,7 @@ from moonhr.models import *
 
 class AstronautAdmin(admin.ModelAdmin):
     list_display = ('name', 'surname', 'sex')
+    search_fields = ['name', 'surname']
 admin.site.register(Astronaut, AstronautAdmin)
 
 

@@ -6,7 +6,7 @@
 
 {% if tags_menu_obj.get_page %}
 <form action="{{tags_menu_obj.get_page}}" method="get">
-    <select id="tag_select" name="skill_tag_pk">
+    <select id="tag_select" name="add_tag_pk">
         {% for skill in tags_menu_obj.more_tags %}
         <option value="{{skill.id}}">{{skill.tag}}</option>
         {% endfor %}
@@ -14,4 +14,15 @@
     <button type="submit">Add tag</button>
     <input type="hidden" name="contact_pk_to_view" value="{{user_astronaut.pk}}">
 </form>
+<br/>
+<form action="{{tags_menu_obj.get_page}}" method="get">
+    <select id="tag_select" name="remove_tag_pk">
+        {% for user_astronaut_tag in tags_menu_obj.user_astronaut_tags %}
+        <option value="{{user_astronaut_tag.id}}">{{user_astronaut_tag.tag.tag}}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Remove tag</button>
+    <input type="hidden" name="contact_pk_to_view" value="{{user_astronaut.pk}}">
+</form>
+<br/>
 {% endif %}
