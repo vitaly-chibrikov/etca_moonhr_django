@@ -18,6 +18,8 @@ admin.site.register(UserProfile, UserProfileAdmin)
 
 admin.site.register(UserAstronaut)
 
+admin.site.register(UserEvent)
+
 admin.site.register(AstronautSkill)
 
 admin.site.register(Mission)

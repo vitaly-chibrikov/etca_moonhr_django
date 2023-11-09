@@ -70,6 +70,18 @@ class UserProfile(models.Model):
     week = models.SmallIntegerField(default=DEFAULT_WEEK)
     score = models.SmallIntegerField(default=DEFAULT_SCORE)
 
+    def get_current():
+        return UserProfile.objects.get(is_selected=True)
+    
+    def addEvent(self, description):
+        event = UserEvent()
+        event.user = self
+        event.time = self.time
+        event.day = self.day
+        event.week = self.week
+        event.description = description 
+        event.save()
+
     def reset(self):
         self.score = UserProfile.DEFAULT_SCORE
         self.time = UserProfile.TIME_DAY_START
@@ -95,6 +107,15 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"{self.user_name}"
 
+class UserEvent(models.Model):
+    user = models.ForeignKey(UserProfile, on_delete=models.PROTECT)
+    time = models.SmallIntegerField(default=UserProfile.TIME_DAY_START)
+    day = models.SmallIntegerField(default=UserProfile.DEFAULT_DAY)
+    week = models.SmallIntegerField(default=UserProfile.DEFAULT_WEEK)
+    description = models.TextField(default="")
+
+    def __str__(self):
+        return f"{self.user.user_name} week: {self.week} day: {self.day} time: {self.time}"
 
 class UserAstronaut(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.PROTECT)
@@ -102,6 +123,10 @@ class UserAstronaut(models.Model):
     status = models.CharField(
         max_length=16, choices=ASTRONAUT_STATUS_CHOISES.choices, default=ASTRONAUT_STATUS_CHOISES.CANDIDATE
     )
+
+    def change_status(self, status, description):
+        self.status = status
+        self.user.addEvent(description)
 
     def __str__(self):
         return f"{self.user.user_name} -> {self.astronaut.name} {self.astronaut.surname} -> {self.status}"
@@ -154,6 +179,9 @@ class UserMission(models.Model):
     result = models.ForeignKey(MissionResult, on_delete=models.PROTECT, null=True, default=None, blank=True)
     weeks_to_end = models.SmallIntegerField(default=DEFAULT_WEEKS_TO_END)
 
+    def change_status(self, status, description):
+        self.status = status
+        self.user.addEvent(description)
 
     def correct_description(self):
         description = ""

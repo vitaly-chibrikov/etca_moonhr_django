@@ -27,8 +27,15 @@
             <input type="hidden" name="end_week" value="1" />
             <button type="submit">End week {{time.week}}</button>
         </form>
-
     </div>
+
+    <div>
+        <p>Events:</p>
+        {% for event in events %}
+            <p>{{event.week}} : {{event.day}} : {{event.time}}:00 -- {{event.description}}</p>
+        {% endfor %}
+    </div>
+
     <p>Score: {{score}}</p>
     <p>---------------------------------------------------</p>
     <p>Debug:</p>
