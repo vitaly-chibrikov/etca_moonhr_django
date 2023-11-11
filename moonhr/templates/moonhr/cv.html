@@ -7,15 +7,14 @@
 </head>
 
 <body>
-    <div><a href="/">Back to Room</a></div>
+    {% include 'moonhr/main-menu.html' %}    
+    </div>
     <p>First name: {{user_astronaut.astronaut.name}}</p>
     <p>Last name: {{user_astronaut.astronaut.surname}}</p>
     <p>Status: {{user_astronaut.status}}</p>
     <p>CV: {{user_astronaut.astronaut.cv|safe}}</p>
     {% include 'moonhr/tags-menu.html' %}
-    <div><a href="/">Back to Room</a></div>
-    <div><a href="/candidates/">Back to candidates</a></div>
-    <div><a href="/employees/">Back to employees</a></div>
+    {% include 'moonhr/main-menu.html' %}
 </body>
 
 </html>

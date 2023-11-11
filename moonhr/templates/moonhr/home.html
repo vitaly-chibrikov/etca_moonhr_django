@@ -7,36 +7,31 @@
 </head>
 
 <body>
-    <p>---------------------------------------------------</p>
-    <p>Game:</p>
-    <div>
-        <p><a href="candidates/">Candidates ({{profile.candidates}})</a></p>
-        <p><a href="employees/">Employees ready ({{profile.ready}})</a></p>
-        <p><a href="missions/">New missions ({{profile.new_missions}})</a></p>
-        <p><a href="workon-missions/?type=inprogress">Current missions ({{profile.current_missions}})</a></p>
-        <p><a href="workon-missions/?type=finished">Finished missions ({{profile.finished_missions}})</a></p>
-        <p>Current time: {{time.time}}:00</p>
-        {% if time.day < 5 %}
-        <form action="/" method="get">
+    {% include 'moonhr/main-menu.html' %}
+    <br />
+    <div class="">
+        {% if profile.day < 5 %} <form action="/" method="get">
             <input type="hidden" name="end_day" value="1" />
-            <button type="submit">End day {{time.day}}</button>
-        </form>
-        <br/>
-        {% endif %}
+            <button type="submit">End day {{profile.day}}</button>
+            </form>
+            {% endif %}
+    </div>
+    <br />
+    <div>
         <form action="/" method="get">
             <input type="hidden" name="end_week" value="1" />
-            <button type="submit">End week {{time.week}}</button>
+            <button type="submit">End week {{profile.week}}</button>
         </form>
     </div>
 
     <div>
         <p>Events:</p>
         {% for event in events %}
-            <p>{{event.week}} : {{event.day}} : {{event.time}}:00 -- {{event.description}}</p>
+        <p>{{event.week}} : {{event.day}} : {{event.time}}:00 -- {{event.description}}</p>
         {% endfor %}
     </div>
 
-    <p>Score: {{score}}</p>
+    <p>Score: {{profile.score}}</p>
     <p>---------------------------------------------------</p>
     <p>Debug:</p>
     <div>

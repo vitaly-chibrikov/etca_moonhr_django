@@ -7,8 +7,7 @@
 </head>
 
 <body>
-    <p>---------------------------------------------------</p>
-    <div><a href="/">Back to Room</a></div>
+    {% include 'moonhr/main-menu.html' %}
     <p>Place: {{page_obj.mission.place.name}}</p>
     <p>Who: {{page_obj.mission.who}}</p>
     <p>Status: {{page_obj.status}}</p>
@@ -19,7 +18,7 @@
     <p>---------------------------------------------------</p>
     <p>Result: {{description|safe}}</p>
     <p>---------------------------------------------------</p>
-    <div><a href="/">Back to Room</a></div>
+    {% include 'moonhr/main-menu.html' %}
 </body>
 
 </html>

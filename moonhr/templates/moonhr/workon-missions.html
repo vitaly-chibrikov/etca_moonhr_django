@@ -7,8 +7,7 @@
 </head>
 
 <body>
-    <div><a href="/">Back to Room</a></div>
-    <p>---------------------------------------------------</p>
+    {% include 'moonhr/main-menu.html' %}
     <div>
         {% for mission in page_obj %}
         <ul>
@@ -47,6 +46,5 @@
         {% endif %}
         </span>
     </div>
-    <p>---------------------------------------------------</p>
-    <div><a href="/">Back to Room</a></div>
+    {% include 'moonhr/main-menu.html' %}
 </body>
