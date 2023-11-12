@@ -4,8 +4,7 @@
     {% endfor %}
 </p>
 
-{% if tags_menu_obj.get_page %}
-<form action="{{tags_menu_obj.get_page}}" method="get">
+<form method="get">
     <select id="tag_select" name="add_tag_pk">
         {% for skill in tags_menu_obj.more_tags %}
         <option value="{{skill.id}}">{{skill.tag}}</option>
@@ -15,7 +14,7 @@
     <input type="hidden" name="contact_pk_to_view" value="{{user_astronaut.pk}}">
 </form>
 <br/>
-<form action="{{tags_menu_obj.get_page}}" method="get">
+<form method="get">
     <select id="tag_select" name="remove_tag_pk">
         {% for user_astronaut_tag in tags_menu_obj.user_astronaut_tags %}
         <option value="{{user_astronaut_tag.id}}">{{user_astronaut_tag.tag.tag}}</option>
@@ -25,4 +24,3 @@
     <input type="hidden" name="contact_pk_to_view" value="{{user_astronaut.pk}}">
 </form>
 <br/>
-{% endif %}

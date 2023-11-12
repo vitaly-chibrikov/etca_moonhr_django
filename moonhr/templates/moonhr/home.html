@@ -8,19 +8,23 @@
 
 <body>
     {% include 'moonhr/main-menu.html' %}
-    <br />
+    <div>
+        <p>User: {{profile.current_user.user_name}} (id={{profile.current_user.pk}})</p>
+    </div>
     <div class="">
-        {% if profile.day < 5 %} <form action="/" method="get">
+        {% if profile.current_user.day < 5 %} <form action="/" method="post">
+            {% csrf_token %}
             <input type="hidden" name="end_day" value="1" />
-            <button type="submit">End day {{profile.day}}</button>
+            <button type="submit">End day {{profile.current_user.day}}</button>
             </form>
             {% endif %}
     </div>
     <br />
     <div>
-        <form action="/" method="get">
+        <form action="/" method="post">
+            {% csrf_token %}
             <input type="hidden" name="end_week" value="1" />
-            <button type="submit">End week {{profile.week}}</button>
+            <button type="submit">End week {{profile.current_user.week}}</button>
         </form>
     </div>
 
@@ -31,18 +35,38 @@
         {% endfor %}
     </div>
 
-    <p>Score: {{profile.score}}</p>
+    <p>Score: {{profile.current_user.score}}</p>
     <p>---------------------------------------------------</p>
     <p>Debug:</p>
     <div>
-        <form action="/" method="get">
+        <form action="/" method="post">
+            {% csrf_token %}
             <input type="hidden" name="reset_game" value="1" />
             <button type="submit">Reset game</button>
         </form>
         <br />
-        <form action="/" method="get">
+        <form action="/" method="post">
+            {% csrf_token %}
             <input type="hidden" name="finish_missions" value="1" />
             <button type="submit">Finish missions</button>
+        </form>
+        <br />
+        <form action="/" method="post">
+            {% csrf_token %}
+            <input name="new_user" value="" />
+            <button type="submit">Add new user</button>
+        </form>
+        <br />
+        <form action="/" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="add_missions" value="1" />
+            <button type="submit">Add missions</button>
+        </form>
+        <br />
+        <form action="/" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="add_astronauts" value="1" />
+            <button type="submit">Add astronauts</button>
         </form>
     </div>
     <div>

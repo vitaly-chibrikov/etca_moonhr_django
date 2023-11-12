@@ -18,16 +18,7 @@
 
         <ul>
             <li>
-                <p>{{ contact.user_astronaut.astronaut.name }}
-                    {{ contact.user_astronaut.astronaut.surname }}
-                    {{ contact.user_astronaut.status }}
-                    <a href="/cv/?contact_pk_to_view={{contact.user_astronaut.pk}}">CV</a>
-                </p>
-                <p>Tags:
-                    {% for user_astronaut_tag in contact.tags %}
-                    {{user_astronaut_tag.tag.tag}}
-                    {% endfor %}
-                </p>
+                {% include 'moonhr/astronaut.html' %} 
             </li>
         </ul>
 

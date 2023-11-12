@@ -175,7 +175,7 @@ class UserMission(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.PROTECT)
     mission = models.ForeignKey(Mission, on_delete=models.PROTECT)
     status = models.CharField(max_length=16, choices=MISSION_STATUS_CHOISES.choices, default=MISSION_STATUS_CHOISES.NEW)
-    astronaut = models.ForeignKey(Astronaut, on_delete=models.PROTECT, null=True, blank=True)
+    user_astronaut = models.ForeignKey(UserAstronaut, on_delete=models.PROTECT, null=True, blank=True)
     result = models.ForeignKey(MissionResult, on_delete=models.PROTECT, null=True, default=None, blank=True)
     weeks_to_end = models.SmallIntegerField(default=DEFAULT_WEEKS_TO_END)
 
@@ -187,11 +187,11 @@ class UserMission(models.Model):
         description = ""
         if self.result:
             description = self.result.description
-            astronaut_name = self.astronaut.name
-            astronaut_surname = self.astronaut.surname
+            astronaut_name = self.user_astronaut.astronaut.name
+            astronaut_surname = self.user_astronaut.astronaut.surname
             description = description.replace(UserMission.DEFAULT_ASTRONAUT_NAME, astronaut_name)
             description = description.replace(UserMission.DEFAULT_ASTRONAUT_SURNAME, astronaut_surname)
-            if self.astronaut.sex is str(SEX_CHOISES.FEMALE):
+            if self.user_astronaut.astronaut.sex is str(SEX_CHOISES.FEMALE):
                 # he/him/his to she/her/hers
                 description = description.replace(" he ", " she ").replace(" him ", " her ").replace(" his ", " her ")
                 description = description.replace("He ", "She ").replace("Him ", "Her ").replace("Him ", "Her ")

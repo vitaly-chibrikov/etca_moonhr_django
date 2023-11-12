@@ -12,17 +12,16 @@
         {% for mission in page_obj %}
         <ul>
             <li>
-                <p>{{ mission.user_mission.mission.place.name }} | 
-                    {{ mission.user_mission.mission.task }} 
-                </p>
+                <p>In {{ mission.user_mission.mission.place.name }}</p>  
+                <p>Task: {{ mission.user_mission.mission.task }}</p>
                 <p>Description: {{mission.user_mission.mission.description|safe}}</p>
-                <p>Astronaut: {{mission.user_mission.astronaut.name}}</p>
+                <p>Astronaut: <a href="/cv/?contact_pk_to_view={{mission.user_mission.user_astronaut.pk}}">{{mission.user_mission.user_astronaut.astronaut}}</a></p>
                 <p>Status: {{ mission.user_mission.status }}</p>
                 {% if finished %}
                 <p>Result: {{mission.description|safe}}</p>
                 <p>Score: {{mission.user_mission.result.score}}</p>
                 {% else %}
-                <p>Will be finished in: {{mission.user_mission.weeks_to_end}} week(s)</p>               
+                <p>Will be finished in {{mission.user_mission.weeks_to_end}} week(s)</p>               
                 {% endif %}
             </li>
         </ul>

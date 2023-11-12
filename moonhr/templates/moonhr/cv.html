@@ -7,13 +7,12 @@
 </head>
 
 <body>
-    {% include 'moonhr/main-menu.html' %}    
+    {% include 'moonhr/main-menu.html' %}
     </div>
-    <p>First name: {{user_astronaut.astronaut.name}}</p>
-    <p>Last name: {{user_astronaut.astronaut.surname}}</p>
-    <p>Status: {{user_astronaut.status}}</p>
-    <p>CV: {{user_astronaut.astronaut.cv|safe}}</p>
+    <p>Name: {{user_astronaut.astronaut.name}} {{user_astronaut.astronaut.surname}}</p>
     {% include 'moonhr/tags-menu.html' %}
+    <p>Status: {{user_astronaut.status}}</p>
+    <p>{{user_astronaut.astronaut.cv|safe}}</p>
     {% include 'moonhr/main-menu.html' %}
 </body>
 
