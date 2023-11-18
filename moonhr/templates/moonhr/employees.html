@@ -4,15 +4,15 @@
 <head>
     <meta charset="utf-8" />
     <title>Employees List</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'moonhr/site.css' %}" />
 </head>
 
 <body>
     {% include 'moonhr/main-menu.html' %}
-    <div>
-        <p>Here, you can see your employees. CVs, tags and statuses.</p>
-        <p>View CVs and work with tags don't take your time.</p>
+    <div class="top_pannel">
+        <p>Here, you can see your employees. CVs, tags and statuses. View CVs and work with tags don't take your time.</p>
     </div>
-    <p>---------------------------------------------------</p>
     <div>
         {% for contact in page_obj %}
 

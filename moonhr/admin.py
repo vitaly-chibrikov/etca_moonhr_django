@@ -9,7 +9,7 @@ admin.site.register(Astronaut, AstronautAdmin)
 
 
 class SkillAdmin(admin.ModelAdmin):
-    list_display = ('name', 'desc')
+    list_display = ('name', 'tag')
 admin.site.register(Skill, SkillAdmin)
 
 class UserProfileAdmin(admin.ModelAdmin):

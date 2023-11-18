@@ -223,9 +223,9 @@ def candidates_view(request):
         hire_astronaut(request)
 
     current_user = UserProfile.get_current()
-    message = f"Current time: {current_user.time}: 00."
+    message = f"Current time: {current_user.time}:00."
     if current_user.time < UserProfile.TIME_DAY_END:
-        message += " You can hire astronauts."
+        message += " You can hire astronauts now."
     else:
         message += " Day time is over. You can't hire more today."
 

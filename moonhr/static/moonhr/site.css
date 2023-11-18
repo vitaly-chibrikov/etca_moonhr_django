@@ -1,0 +1,88 @@
+body {
+    font-family: "Helvetica", Sans-Serif;
+
+    text-align: justify;
+    letter-spacing: .04rem;
+    line-height: 1.7em;
+    background-color:aquamarine;
+}
+
+.borders{
+    padding: 0.5em;
+    margin: 0.5em;
+    border-block: 0px solid red;
+}
+
+.borders_float{
+    padding: 0.5em;
+    margin-bottom: 1em;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+
+.left_pannel {
+    width: 400px;
+    float: left;   
+    background-color: antiquewhite;
+}
+
+.right_pannel {
+    overflow: hidden;
+    background-color: azure;
+}
+
+.menu_button {
+    float: left;
+    width: 200px;
+    background-color: blanchedalmond
+}
+
+.main-menu {
+    overflow: hidden;
+    background-color: bisque;
+    text-align: center;
+}
+
+.top_pannel {
+    background-color: beige;
+    text-align: center;
+}
+
+.left_menu_block {
+    width: auto;
+    overflow: hidden;
+    background-color: burlywood;
+}
+
+.astronaut_name {
+    float: left;
+    width: 250px;
+    background-color:aliceblue;
+}
+
+.hire_button {
+    float: left;
+    width: 100px;
+    height: 100px;
+}
+
+ul {
+    list-style-type: none;
+    /* display: inline-block; */
+}
+
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+a:active {
+    text-decoration: none;
+}

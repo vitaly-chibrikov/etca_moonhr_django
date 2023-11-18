@@ -4,74 +4,76 @@
 <head>
     <meta charset="utf-8" />
     <title>Moon Home</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'moonhr/site.css' %}" />
 </head>
 
 <body>
     {% include 'moonhr/main-menu.html' %}
-    <div>
-        <p>User: {{profile.current_user.user_name}} (id={{profile.current_user.pk}})</p>
+    <div class="top_pannel borders_float">
+        <p>User: {{profile.current_user.user_name}} (id={{profile.current_user.pk}}) Score:
+            {{profile.current_user.score}}</p>
     </div>
-    <div class="">
-        {% if profile.current_user.day < 5 %} <form action="/" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="end_day" value="1" />
-            <button type="submit">End day {{profile.current_user.day}}</button>
+    <div class="left_pannel borders_float">
+        <div class="">
+            {% if profile.current_user.day < 5 %} <form action="/" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="end_day" value="1" />
+                <button type="submit">End day {{profile.current_user.day}}</button>
+                </form>
+                {% endif %}
+        </div>
+        <br />
+        <div>
+            <form action="/" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="end_week" value="1" />
+                <button type="submit">End week {{profile.current_user.week}}</button>
             </form>
-            {% endif %}
+        </div>
+        <p>---------------------------------------------------</p>
+        <p>Debug:</p>
+        <div>
+            <form action="/" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="reset_game" value="1" />
+                <button type="submit">Reset game</button>
+            </form>
+            <br />
+            <form action="/" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="finish_missions" value="1" />
+                <button type="submit">Finish missions</button>
+            </form>
+            <br />
+            <form action="/" method="post">
+                {% csrf_token %}
+                <input name="new_user" value="" />
+                <button type="submit">Add new user</button>
+            </form>
+            <br />
+            <form action="/" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="add_missions" value="1" />
+                <button type="submit">Add missions</button>
+            </form>
+            <br />
+            <form action="/" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="add_astronauts" value="1" />
+                <button type="submit">Add astronauts</button>
+            </form>
+        </div>
+        <div>
+            <p><a href="mission-description/?mission_pk_to_view=1">Mission</a></p>
+            <p><a href="cv/?contact_pk_to_view=1">CV</a></p>
+        </div>
     </div>
-    <br />
-    <div>
-        <form action="/" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="end_week" value="1" />
-            <button type="submit">End week {{profile.current_user.week}}</button>
-        </form>
-    </div>
-
-    <div>
-        <p>Events:</p>
+    <div class="right_pannel borders_float">
+        <p>Event list:</p>
         {% for event in events %}
         <p>{{event.week}} : {{event.day}} : {{event.time}}:00 -- {{event.description}}</p>
         {% endfor %}
-    </div>
-
-    <p>Score: {{profile.current_user.score}}</p>
-    <p>---------------------------------------------------</p>
-    <p>Debug:</p>
-    <div>
-        <form action="/" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="reset_game" value="1" />
-            <button type="submit">Reset game</button>
-        </form>
-        <br />
-        <form action="/" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="finish_missions" value="1" />
-            <button type="submit">Finish missions</button>
-        </form>
-        <br />
-        <form action="/" method="post">
-            {% csrf_token %}
-            <input name="new_user" value="" />
-            <button type="submit">Add new user</button>
-        </form>
-        <br />
-        <form action="/" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="add_missions" value="1" />
-            <button type="submit">Add missions</button>
-        </form>
-        <br />
-        <form action="/" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="add_astronauts" value="1" />
-            <button type="submit">Add astronauts</button>
-        </form>
-    </div>
-    <div>
-        <p><a href="mission-description/?mission_pk_to_view=1">Mission</a></p>
-        <p><a href="cv/?contact_pk_to_view=1">CV</a></p>
     </div>
 </body>
 
