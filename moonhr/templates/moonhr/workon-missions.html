@@ -9,43 +9,52 @@
 </head>
 
 <body>
-    {% include 'moonhr/main-menu.html' %}
-    <div>
-        {% for mission in page_obj %}
-        <ul>
-            <li>
-                <p>In {{ mission.user_mission.mission.place.name }}</p>  
+    <div class="fixed-width">
+        {% include 'moonhr/main-menu.html' %}
+        <div class="top_pannel borders">
+            <p>Mission mesasage.
+            </p>
+        </div>
+        <div class="central_pannel borders">
+
+            <div class="pagination borders">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                    <a href="?page=1{% if finished %}&type=finished{% endif %}">&laquo; first</a>
+                    <a
+                        href="?page={{ page_obj.previous_page_number }}{% if finished %}&type=finished{% endif %}">previous</a>
+                    {% endif %}
+
+                    <span class=" current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+
+                    {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if finished %}&type=finished{% endif %}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{% if finished %}&type=finished{% endif %}">last
+                        &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+
+            {% for mission in page_obj %}
+            <div class="mission_results mission_block borders">
+                <p>In {{ mission.user_mission.mission.place.name }}</p>
                 <p>Task: {{ mission.user_mission.mission.task }}</p>
                 <p>Description: {{mission.user_mission.mission.description|safe}}</p>
-                <p>Astronaut: <a href="/cv/?contact_pk_to_view={{mission.user_mission.user_astronaut.pk}}">{{mission.user_mission.user_astronaut.astronaut}}</a></p>
+                <p>Astronaut: <a
+                        href="/cv/?contact_pk_to_view={{mission.user_mission.user_astronaut.pk}}">{{mission.user_mission.user_astronaut.astronaut}}</a>
+                </p>
                 <p>Status: {{ mission.user_mission.status }}</p>
                 {% if finished %}
                 <p>Result: {{mission.description|safe}}</p>
                 <p>Score: {{mission.user_mission.result.score}}</p>
                 {% else %}
-                <p>Will be finished in {{mission.user_mission.weeks_to_end}} week(s)</p>               
+                <p>Will be finished in {{mission.user_mission.weeks_to_end}} week(s)</p>
                 {% endif %}
-            </li>
-        </ul>
-        {% endfor %}
+
+                {% endfor %}
+            </div>
+        </div>
     </div>
-
-    <div class="pagination">
-        <span class="step-links">
-            {% if page_obj.has_previous %}
-            <a href="?page=1{% if finished %}&type=finished{% endif %}">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}{% if finished %}&type=finished{% endif %}">previous</a>
-            {% endif %}
-
-            <span class=" current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </span>
-
-        {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}{% if finished %}&type=finished{% endif %}">next</a>
-        <a href="?page={{ page_obj.paginator.num_pages }}{% if finished %}&type=finished{% endif %}">last &raquo;</a>
-        {% endif %}
-        </span>
-    </div>
-    {% include 'moonhr/main-menu.html' %}
 </body>

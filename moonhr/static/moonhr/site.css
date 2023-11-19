@@ -1,40 +1,32 @@
 body {
     font-family: "Helvetica", Sans-Serif;
-
+    font-size: 16px;
     text-align: justify;
     letter-spacing: .04rem;
     line-height: 1.7em;
-    background-color:aquamarine;
+    background-color: aquamarine;
 }
 
-.borders{
-    padding: 0.5em;
-    margin: 0.5em;
+.fixed-width {
+    background-color: rgb(238, 238, 238);
+    margin: auto;
+    max-width: 1200px;
+}
+
+.borders {
+    padding: 1em;
     border-block: 0px solid red;
 }
 
-.borders_float{
-    padding: 0.5em;
-    margin-bottom: 1em;
-    margin-left: 0.5em;
-    margin-right: 0.5em;
-}
-
 .left_pannel {
-    width: 400px;
-    float: left;   
+    width: 22em;
+    float: left;
     background-color: antiquewhite;
 }
 
 .right_pannel {
     overflow: hidden;
     background-color: azure;
-}
-
-.menu_button {
-    float: left;
-    width: 200px;
-    background-color: blanchedalmond
 }
 
 .main-menu {
@@ -54,21 +46,72 @@ body {
     background-color: burlywood;
 }
 
-.astronaut_name {
+.central_pannel {
+    display: inline-block;
+
+    background-color:darkkhaki;
+}
+
+.astronaut_block {
     float: left;
-    width: 250px;
-    background-color:aliceblue;
+    background-color: aliceblue;
+    width: 11em;
+}
+
+.button {
+    font-family: "Helvetica", Sans-Serif;
+    font-size: 16px;
+}
+
+.menu_button {
+    float: left;
+    width: 10em;
+    background-color: blanchedalmond
 }
 
 .hire_button {
+    float: right;
+    width: 4em;
+    height: 5.5em;
+}
+
+.send_button{
+    float: right;
+    width: 8em;
+    height: 5.5em;
+}
+
+.candidate {
+    overflow: hidden;
+    width: 20em;
     float: left;
-    width: 100px;
-    height: 100px;
+    background-color: burlywood;
+}
+
+.contacts_pannel{
+    display: inline-block;
+    background-color:antiquewhite;
+}
+
+.event {
+    background-color: aqua;
+}
+
+.pagination{
+    background-color:cadetblue;
+}
+
+.mission_block{
+    display: inline-block;
+}
+
+.mission_results{
+    background-color:aliceblue;
 }
 
 ul {
     list-style-type: none;
-    /* display: inline-block; */
+    display: inline-block;
 }
 
 a:link {

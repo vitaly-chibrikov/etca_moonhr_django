@@ -171,11 +171,13 @@ def get_profile():
     finished_missions = UserMission.objects.filter(user__pk=current_user.pk).filter(
         status=MISSION_STATUS_CHOISES.FINISHED
     )
+    employees = UserAstronaut.objects.filter(user__pk=current_user.pk).exclude(status=ASTRONAUT_STATUS_CHOISES.CANDIDATE)
 
     profile = {
         "current_user": current_user,
         "candidates": len(candidates),
         "ready": len(ready),
+        "employees": len(employees),
         "new_missions": len(new_missions),
         "current_missions": len(current_missions),
         "finished_missions": len(finished_missions),
@@ -227,7 +229,7 @@ def candidates_view(request):
     if current_user.time < UserProfile.TIME_DAY_END:
         message += " You can hire astronauts now."
     else:
-        message += " Day time is over. You can't hire more today."
+        message += " You can't hire more today."
 
     contac_list = ContactListView()
     paginator = Paginator(contac_list.get_candidates(), contac_list.paginate_by)
@@ -371,7 +373,7 @@ def missions_view(request):
     if current_user.time < UserProfile.TIME_DAY_END:
         message += " You can send astronauts to missions."
     else:
-        message += " Day time is over. You can't start more missions today."
+        message += " You can't start more missions today."
 
     return render(
         request,

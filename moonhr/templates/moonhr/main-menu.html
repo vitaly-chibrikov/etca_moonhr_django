@@ -1,8 +1,8 @@
-<div class="main-menu borders_float">
-    <div class="menu_button borders"><a href="/">Events on {{profile.current_user.week}}:{{profile.current_user.day}} at {{profile.current_user.time}}:00 </a></div>
-    <div class="menu_button borders"><a href="/candidates/">Candidates ({{profile.candidates}})</a></div>
-    <div class="menu_button borders"><a href="/employees/">Employees ready ({{profile.ready}})</a></div>
-    <div class="menu_button borders"><a href="/missions/">New missions ({{profile.new_missions}})</a></div>
-    <div class="menu_button borders"><a href="/workon-missions/?type=inprogress">Current missions ({{profile.current_missions}})</a></div>
-    <div class="menu_button borders"><a href="/workon-missions/?type=finished">Finished missions ({{profile.finished_missions}})</a></div>
+<div class="main-menu borders">
+    <div class="menu_button borders"><a href="/">{{profile.current_user.week}}:{{profile.current_user.day}}:{{profile.current_user.time}}:00 </a></div>
+    <div class="menu_button borders"><a href="/candidates/">Candidates({{profile.candidates}})</a></div>
+    <div class="menu_button borders"><a href="/employees/">Ready ({{profile.ready}})</a></div>
+    <div class="menu_button borders"><a href="/missions/">Missions ({{profile.new_missions}})</a></div>
+    <div class="menu_button borders"><a href="/workon-missions/?type=inprogress">Current ({{profile.current_missions}})</a></div>
+    <div class="menu_button borders"><a href="/workon-missions/?type=finished">Finished ({{profile.finished_missions}})</a></div>
 </div>

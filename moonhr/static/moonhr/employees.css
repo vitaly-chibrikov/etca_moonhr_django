@@ -1,0 +1,27 @@
+.astronaut_name {
+    overflow: hidden;
+    float: left;
+    padding: 1em;
+    width: 22em;
+    background-color: aliceblue;
+}
+
+.astronaut_tags {
+    overflow: hidden;
+    float: left;
+    padding: 1em;
+    width:  22em;
+    background-color: antiquewhite;
+}
+
+.astronaut_status{
+    float: left;
+    width:  22em;
+    background-color:bisque;
+}
+
+.employee_line{
+    overflow: hidden;
+    margin: auto;
+    width: 100%;
+}

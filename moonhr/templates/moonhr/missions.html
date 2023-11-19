@@ -9,67 +9,64 @@
 </head>
 
 <body>
-    {% include 'moonhr/main-menu.html' %}
-    <div class="top_pannel">
-        <p>Here, you can send employed astronauts on missions. Reading mission details is free. Send to mission is taking 2 hours.</p>
-    </div>
+    <div class="fixed-width">
+        {% include 'moonhr/main-menu.html' %}
+        <div class="top_pannel  borders">
+            <p>Here, you can send employed astronauts on missions.
+                Astronauts for missions: {{astronauts_count}}
+                {{message}}</p>
+        </div>
 
-    <div class="left_pannel">
-        <p>Astronauts for missions: {{astronauts_count}} </p>
-        <p>{{message}}</p>
-        {% for contact in user_astronauts %}
-        <form action="/missions/" method="post">
-            {% csrf_token %}
-            {% include 'moonhr/astronaut.html' %}
+        <div class="left_pannel borders">
+            {% for contact in user_astronauts %}
+            <div class="mission_block">
+                <form action="/missions/" method="post">
+                    {% csrf_token %}
+                    <div class="astronaut_block borders">
+                        {% include 'moonhr/astronaut.html' %}
+                    </div>
 
                     <input type="hidden" name="user_astornaut_pk" value="{{ contact.user_astronaut.pk }}">
                     {% for user_mission in page_obj %}
                     <input type="hidden" name="user_mission_pk" value="{{ user_mission.pk }}">
                     {% endfor %}
-                      
-                    <p><button type="submit">Send {{ contact.user_astronaut.astronaut.name }} to {% for user_mission in page_obj %}
-                        {{user_mission.mission.place.name}}
-                        {% endfor %}</button></p>
-                    
-            
-        </form>
-        {% endfor %}
 
-    </div>
+                    <button class="send_button button borders" type="submit">Send 
+                        {{contact.user_astronaut.astronaut.name}} </button>
 
-    <div class="right_pannel">
-        {% for user_mission in page_obj %}
-        <ul>
-            <li>
-                <p>{{ user_mission.mission.place.name }} | {{ user_mission.mission.task }} | {{ user_mission.status }}
-                </p>
-                <p>Description: {{user_mission.mission.description|safe}}</p>
-            </li>
-        </ul>
-        {% endfor %}
-        <div class="pagination">
-            <span class="step-links">
-                {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo; first</a>
-                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-                {% endif %}
-    
-                <span class="current">
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="right_pannel borders">
+            <div class="pagination borders">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+
+                    {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
                 </span>
-    
-                {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">next</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-                {% endif %}
-            </span>
+            </div>
+            {% for user_mission in page_obj %}
+            <div class="borders">{{ user_mission.mission.task }} for {{ user_mission.mission.who }} in
+                {{user_mission.mission.place.name }}</div>
+            <div class="borders">{{user_mission.mission.description|safe}}</div>
+            {% endfor %}
+
         </div>
     </div>
 
-
-
-   
-    
 </body>
 
 </html>

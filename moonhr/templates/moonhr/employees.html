@@ -6,43 +6,49 @@
     <title>Employees List</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'moonhr/site.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'moonhr/employees.css' %}" />
 </head>
 
 <body>
-    {% include 'moonhr/main-menu.html' %}
-    <div class="top_pannel">
-        <p>Here, you can see your employees. CVs, tags and statuses. View CVs and work with tags don't take your time.</p>
+    <div class="fixed-width">
+        {% include 'moonhr/main-menu.html' %}
+        <div class="top_pannel borders">
+            <p>Here, you can see your employees. CVs, tags and statuses. View CVs and work with tags don't take your
+                time.
+            </p>
+        </div>
+
+        <div class="central_pannel borders">
+            <div class="pagination borders">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+
+                    {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+
+            {% for contact in page_obj %}
+            <div class="employee_line">
+                {% include 'moonhr/astronaut.html' %}
+                <div class="astronaut_status borders">
+                    {{ contact.user_astronaut.status }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
-    <div>
-        {% for contact in page_obj %}
 
-        <ul>
-            <li>
-                {% include 'moonhr/astronaut.html' %} 
-            </li>
-        </ul>
 
-        {% endfor %}
-    </div>
-
-    <div class="pagination">
-        <span class="step-links">
-            {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-            {% endif %}
-
-            <span class="current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-            </span>
-
-            {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-            {% endif %}
-        </span>
-    </div>
-    {% include 'moonhr/main-menu.html' %}
 </body>
 
 </html>

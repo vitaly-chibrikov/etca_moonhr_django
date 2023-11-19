@@ -9,71 +9,80 @@
 </head>
 
 <body>
-    {% include 'moonhr/main-menu.html' %}
-    <div class="top_pannel borders_float">
-        <p>User: {{profile.current_user.user_name}} (id={{profile.current_user.pk}}) Score:
-            {{profile.current_user.score}}</p>
-    </div>
-    <div class="left_pannel borders_float">
-        <div class="">
-            {% if profile.current_user.day < 5 %} <form action="/" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="end_day" value="1" />
-                <button type="submit">End day {{profile.current_user.day}}</button>
+    <div class="fixed-width">
+        {% include 'moonhr/main-menu.html' %}
+        <div class="top_pannel borders">
+            <p>Menu text</p>
+        </div>
+        <div class="left_pannel borders">
+            <div class="borders">KPI of {{profile.current_user.user_name}}</div>
+            <div class="borders">Employees: {{profile.employees}}</div>
+            <div class="borders">Finished missions: {{profile.finished_missions}}</div>
+            <div class="borders">Current missions: {{profile.current_missions}} </div>
+            <div class="borders">Score:
+                {{profile.current_user.score}}</div>
+            <div>
+                {% if profile.current_user.day < 5 %} <form action="/" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="end_day" value="1" />
+                    <button class="button" type="submit">
+                        <div class="borders">End day {{profile.current_user.day}}</div>
+                    </button>
+                    </form>
+                    {% endif %}
+            </div>
+            <div>
+                <form action="/" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="end_week" value="1" />
+                    <button class="button" type="submit">
+                        <div class="borders">End week {{profile.current_user.week}}</div>
+                    </button>
                 </form>
-                {% endif %}
+            </div>
+            <div class="borders">Debug:</div>
+            <div>
+                <form action="/" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="reset_game" value="1" />
+                    <button type="submit">Reset game</button>
+                </form>
+                <br />
+                <form action="/" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="finish_missions" value="1" />
+                    <button type="submit">Finish missions</button>
+                </form>
+                <br />
+                <form action="/" method="post">
+                    {% csrf_token %}
+                    <input name="new_user" value="" />
+                    <button type="submit">Add new user</button>
+                </form>
+                <br />
+                <form action="/" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="add_missions" value="1" />
+                    <button type="submit">Add missions</button>
+                </form>
+                <br />
+                <form action="/" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="add_astronauts" value="1" />
+                    <button type="submit">Add astronauts</button>
+                </form>
+            </div>
+            <div>
+                <p><a href="mission-description/?mission_pk_to_view=1">Mission</a></p>
+                <p><a href="cv/?contact_pk_to_view=1">CV</a></p>
+            </div>
         </div>
-        <br />
-        <div>
-            <form action="/" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="end_week" value="1" />
-                <button type="submit">End week {{profile.current_user.week}}</button>
-            </form>
+        <div class="right_pannel borders">
+            <div class="borders event">Event list:</div>
+            {% for event in events %}
+            <div class="borders event">{{event.week}} : {{event.day}} : {{event.time}}:00 -- {{event.description}}</div>
+            {% endfor %}
         </div>
-        <p>---------------------------------------------------</p>
-        <p>Debug:</p>
-        <div>
-            <form action="/" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="reset_game" value="1" />
-                <button type="submit">Reset game</button>
-            </form>
-            <br />
-            <form action="/" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="finish_missions" value="1" />
-                <button type="submit">Finish missions</button>
-            </form>
-            <br />
-            <form action="/" method="post">
-                {% csrf_token %}
-                <input name="new_user" value="" />
-                <button type="submit">Add new user</button>
-            </form>
-            <br />
-            <form action="/" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="add_missions" value="1" />
-                <button type="submit">Add missions</button>
-            </form>
-            <br />
-            <form action="/" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="add_astronauts" value="1" />
-                <button type="submit">Add astronauts</button>
-            </form>
-        </div>
-        <div>
-            <p><a href="mission-description/?mission_pk_to_view=1">Mission</a></p>
-            <p><a href="cv/?contact_pk_to_view=1">CV</a></p>
-        </div>
-    </div>
-    <div class="right_pannel borders_float">
-        <p>Event list:</p>
-        {% for event in events %}
-        <p>{{event.week}} : {{event.day}} : {{event.time}}:00 -- {{event.description}}</p>
-        {% endfor %}
     </div>
 </body>
 
